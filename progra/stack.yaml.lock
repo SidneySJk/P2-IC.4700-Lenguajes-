@@ -3,11 +3,17 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/topics/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: aeson-pretty-0.8.10@sha256:6b0d3c1004dc696cdfea45b442dd025b5ca62ecce44bf8669775529d5b672114,2524
+    pantry-tree:
+      sha256: bcb2557f2325f00b158bf9bc1a9c8cc0d3b15a3f6f9711fd41b08d08e31dc694
+      size: 395
+  original:
+    hackage: aeson-pretty-0.8.10
 snapshots:
 - completed:
-    sha256: 95817c7fe8ae8ca6e8f4ecfd3e876b3edc4e5fbba9f8d8f757e87b484f9bfe6b
-    size: 726101
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/13.yaml
-  original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/13.yaml
+    sha256: afd5ba64ab602cabc2d3942d3d7e7dd6311bc626dcb415b901eaf576cb62f0ea
+    size: 640060
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/22.yaml
+  original: lts-21.22

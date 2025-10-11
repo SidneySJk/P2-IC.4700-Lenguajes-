@@ -1,7 +1,15 @@
 module Main where
-    
+-- module Backend.Importacion (validarDireccion, validarDatos) where
+
 import System.IO
 import Control.Monad()
+import Backend.Importacion (validarDireccion, validarDatos)
+
+-- validarDireccion :: String -> Bool
+-- validarDireccion = undefined
+
+-- validarDatos :: String -> IO ()
+-- validarDatos = undefined
 
 menu :: IO ()
 menu = do
@@ -56,8 +64,15 @@ menuImportacion = do
     if ruta == " "
         then menu 
         else do
-            putStrLn $ "Importar datos desde la ruta: " ++ ruta
-            putStrLn (concat (replicate 20 "°.*."))
+            valido <- validarDireccion ruta
+            if valido == False 
+                then do 
+                    putStrLn "Direccion no valida, intente de nuevo. "
+                    menuImportacion
+                else do 
+                    validarDatos ruta
+                    putStrLn $ "Importar datos desde la ruta: " ++ ruta
+                    putStrLn (concat (replicate 20 "°.*."))
     hFlush stdout
 
 menuProcesamiento :: IO ()
