@@ -4,12 +4,8 @@ module Main where
 import System.IO
 import Control.Monad()
 import Backend.Importacion (validarDireccion, validarDatos)
-
--- validarDireccion :: String -> Bool
--- validarDireccion = undefined
-
--- validarDatos :: String -> IO ()
--- validarDatos = undefined
+import Backend.Procesamiento (encontrarNullCantidad, encontrarNullPrecioUnitario)
+import Backend.Analisis (totalVentas, totalVentasMensuales, totalVentasAnuales)
 
 menu :: IO ()
 menu = do
@@ -28,25 +24,15 @@ menu = do
     opcion <- getLine
     case opcion of
         "1" -> do
-            putStrLn "Importacion de datos seleccionada"
-            -- Llamar a la funcion correspondiente
             menuImportacion
             menu
         "2" -> do
-            putStrLn "Procesamiento de datos seleccionada"
-            -- Llamar a la funcion correspondiente
             menuProcesamiento
         "3" -> do
-            putStrLn "Analisis de datos seleccionada"
-            -- Llamar a la funcion correspondiente
             menuAnalisisDatos
         "4" -> do
-            putStrLn "Analisis temporal seleccionada"
-            -- Llamar a la funcion correspondiente
             menuAnalisisTemporal
         "5" -> do
-            putStrLn "Estadisticas seleccionada"
-            -- Llamar a la funcion correspondiente
             menuEstadisticas
             menu
         "6" -> putStrLn "Saliendo..."
@@ -54,41 +40,68 @@ menu = do
             putStrLn "Opcion no valida, intente de nuevo."
             menu
 
+
+validacionesRutas :: String -> String -> IO Bool
+validacionesRutas ruta rutaD = do
+    valido <- validarDireccion ruta
+    validoD <- validarDireccion rutaD
+    if (not valido || not validoD) then do 
+        putStrLn "Direccion no valida, intente de nuevo. "
+        return False
+    else do
+        putStrLn $ "Importar datos desde la ruta: " ++ ruta
+        putStrLn $ "Guardar datos en la ruta: " ++ rutaD
+        return True
+
+
 menuImportacion :: IO ()
 menuImportacion = do 
     putStrLn (concat (replicate 20 "°.*."))
     putStrLn "Menu de importacion de datos"
     putStrLn "Aprete espacio para volver al menu"
+    putStrLn "Ingrese la ruta destino del archivo a importar: "
+    rutaD <- getLine
     putStrLn "Ingrese la ruta del archivo a importar: "
     ruta <- getLine
-    if ruta == " "
+    if (rutaD == " " || ruta == " ")
         then menu 
         else do
-            valido <- validarDireccion ruta
-            if valido == False 
+            valido <- validacionesRutas ruta rutaD
+            -- let validarDir = validarDireccion ruta
+            -- let validarDirD = validarDireccion rutaD
+            if (not valido)
                 then do 
-                    putStrLn "Direccion no valida, intente de nuevo. "
                     menuImportacion
                 else do 
-                    validarDatos ruta
-                    putStrLn $ "Importar datos desde la ruta: " ++ ruta
+                    validarDatos ruta rutaD
                     putStrLn (concat (replicate 20 "°.*."))
     hFlush stdout
+
 
 menuProcesamiento :: IO ()
 menuProcesamiento = do 
     putStrLn (concat (replicate 20 "°.*."))
     putStrLn "Menu de procesamiento de datos"
     putStrLn "Aprete espacio para volver al menu"
-    putStrLn "Completando y eliminando datos..."
+    putStrLn "Ingrese la ruta del archivo a procesar: "
 
-    salir <- getLine
-    if salir == " "
+    direccion <- getLine
+    if direccion == " "
         then menu 
         else do
-            menu 
-            putStrLn (concat (replicate 20 "°.*."))
+            validarDir <- validarDireccion direccion
+            if (not validarDir) 
+                then do 
+                    putStrLn "Direccion invalida"
+                    menuProcesamiento
+                else do
+                    encontrarNullCantidad direccion
+                    encontrarNullPrecioUnitario direccion
+                    putStrLn "Completando y eliminando datos..."
+                    menu
+                    putStrLn (concat (replicate 20 "°.*."))
     hFlush stdout
+
 
 menuAnalisisDatos :: IO ()
 menuAnalisisDatos = do
@@ -96,24 +109,36 @@ menuAnalisisDatos = do
     putStrLn "Menu de Analisis de datos"
     putStrLn "1. Total de ventas"
     putStrLn "2. Total de ventas mensuales y anuales"
-    putStrLn "3. Total de ventas por categoria por año"
+    -- putStrLn "3. Total de ventas por categoria por año"
     putStrLn "4. Salir"
     opcion <- getLine
     putStrLn (concat (replicate 20 "°.*."))
     hFlush stdout
     case opcion of
         "1" -> do
+
             putStrLn "Total de ventas seleccionada"
-            -- Llamar a la funcion correspondiente
+            putStrLn "Ingrese la ruta del archivo a procesar: "
+            ruta <- getLine
+            totalVentas ruta
             menuAnalisisDatos
         "2" -> do
+            
             putStrLn "Total de ventas mensuales y anuales seleccionada"
-            -- Llamar a la funcion correspondiente
+            putStrLn "Ingrese la ruta del archivo a procesar: "
+            rango1 <- getLine
+            putStrLn (concat (replicate 20 "°.*."))
+            
+            --totalVentasMensuales 
+            --totalVentas
             menuAnalisisDatos
+            putStrLn (concat (replicate 20 "°.*."))
+        {-
         "3" -> do
             putStrLn "Total de ventas por categoria por año seleccionada"
             -- Llamar a la funcion correspondiente
             menuAnalisisDatos
+        -}
         "4" -> menu
         _   -> do
             putStrLn "Opcion no valida, intente de nuevo."
@@ -184,3 +209,6 @@ menuEstadisticas = do
 main :: IO ()
 main = do
     menu
+
+-- "src/Backend/Modules/Data.json"
+-- "src/Backend/Modules/Importar.json"

@@ -1,0 +1,22 @@
+[ 
+    { 
+        "venta_id": 1, 
+        "fecha": "2023-01-04", 
+        "producto_id": 109, 
+        "producto_nombre": "C\u00e1mara", 
+        "categoria": "Electr\u00f3nica", 
+        "cantidad": 2, 
+        "precio_unitario": 250.0, 
+        "total": -500.0 
+    }, 
+    { 
+        "venta_id": 5, 
+        "fecha": "2023-01-12", 
+        "producto_id": 176, 
+        "producto_nombre": "Tel\u00e9fono", 
+        "categoria": "Electr\u00f3nica", 
+        "cantidad": 3, 
+        "precio_unitario": 500.0, 
+        "total": 500.0 
+    } 
+] 

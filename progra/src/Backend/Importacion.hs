@@ -3,14 +3,13 @@
 
 module Backend.Importacion where
 
-
 import Data.Aeson.Types (ToJSON(toJSON), FromJSON(parseJSON), Value(..), object, (.=), (.:), withObject) 
 import Data.Aeson (encode, decode, pairs)
 
 -- Libreria Data.Aeson
 import qualified Data.ByteString.Lazy as DataJS
 import Data.Aeson.Encode.Pretty (encodePretty, defConfig, Config(..))
--- import Data.Text (Text)
+import Data.Text (Text)
 
 -- Libreria Time
 import Data.Time.Format (parseTimeM, defaultTimeLocale)
@@ -55,7 +54,7 @@ instance FromJSON Venta where
         <*> v .: "total"
 
 
-validarDireccion :: String -> IO Bool
+-- validarDireccion :: String -> IO Bool
 validarDireccion direccion = do
     existe <- doesFileExist direccion
     return existe
@@ -64,7 +63,7 @@ validarDireccion direccion = do
 validarFecha :: String -> Bool
 validarFecha fecha = do
     case parseTimeM True defaultTimeLocale "%Y-%m-%d" fecha:: Maybe Day of
-        Just _ -> True --(_ :: Day) -> True
+        Just _ -> True 
         Nothing -> False  
 
 
@@ -82,35 +81,37 @@ validarVenta venta = do
                     return (Just venta)
 
 
-validarDatos :: String -> IO ()
-validarDatos direccion = do
-    leer <- DataJS.readFile direccion
-    let ventas = decode leer :: Maybe [Venta]
-    case ventas of 
-        Just v -> do 
-            jsonCorregido <- mapM validarVenta v
-            let filtro = catMaybes jsonCorregido 
-            DataJS.writeFile direccion (encode FromJSON filtro) -- (encodePretty' validarOrden jsonCorregido) -- DataJS.writeFile direccionencode toJSON jsonCorregido)
-        Nothing -> putStrLn "Error archivo Json no cumple con las especificaciones"
+concatenarJsons :: String -> String -> IO()
+concatenarJsons direccion destino = do 
+    leerDir <- DataJS.readFile direccion
+    let ventasDir = decode leerDir :: Maybe [Venta]
+    leerDest <- DataJS.readFile destino
+    let ventasDest = decode leerDest :: Maybe [Venta]
+    
+    case (ventasDest, ventasDir) of
+        (Just vDest, Just vDir) -> do 
+            let concatenado = (vDest ++ vDir)
+            jsonCorregido <- mapM validarVenta concatenado
+            let filtro = catMaybes jsonCorregido -- filter esValida jsonCorregido  
+            DataJS.writeFile destino (encodePretty filtro) 
+        _ -> putStrLn "Error no se pudo importar el archivo"
+
+ 
+validarDatos :: String -> String -> IO ()
+validarDatos direccion destino = do
+    if direccion == destino 
+        then do
+            leer <- DataJS.readFile direccion
+            let ventas = decode leer :: Maybe [Venta]
+            case ventas of 
+                Just v -> do 
+                    jsonCorregido <- mapM validarVenta v
+                    let filtro = catMaybes jsonCorregido 
+                    DataJS.writeFile destino (encodePretty filtro) 
+                Nothing -> putStrLn "Error archivo Json no cumple con las especificaciones"
+        else do
+            concatenarJsons direccion destino
+            putStrLn "Informacion importada con exito"
 
 
-
-
-validarDatos :: String -> IO ()
-validarDatos direccion = do
-    leer <- DataJS.readFile direccion
-    let ventas = decode leer :: Maybe [Venta]
-    case ventas of 
-        Just v -> do 
-            jsonCorregido <- mapM validarVenta v
-            let filtro = catMaybes jsonCorregido 
-            
-            -- Debug: mira qué produce encode
-            let resultado = encode filtro
-            putStrLn "DEBUG - JSON generado:"
-            putStrLn (show resultado)
-
-            DataJS.writeFile direccion (encodePretty filtro)
-        Nothing -> putStrLn "Error archivo Json no cumple con las especificaciones"
-   
 
