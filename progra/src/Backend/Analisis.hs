@@ -26,7 +26,7 @@ split xs = ys : (split . drop 1) zs
    where (ys, zs) = span (/='-') xs
 
 
-totalVentasMensuales:: String -> String -> IO ()
+totalVentasMensuales:: String -> String -> IO Int--IO ()
 totalVentasMensuales mes direccion = do 
     leer <- DataJS.readFile direccion
     let contenido = decode leer :: Maybe [Venta]      
@@ -37,11 +37,42 @@ totalVentasMensuales mes direccion = do
                         [_, month, _] -> month == mes
                         _ -> False ) v
             
-            if null ventasMes then return () --putStrLn "No hay registros del mes solicitado"
+            if null ventasMes then return 0 --() --putStrLn "No hay registros del mes solicitado"
                 else do 
                     let totalCant = foldl (\sum x -> sum + cantidad x) 0 ventasMes
-                    putStrLn $ "Total vendido en el mes " ++ mes ++ ": " ++ show totalCant
+                    return totalCant
+                    -- putStrLn $ "Total vendido en el mes " ++ mes ++ ": " ++ show totalCant
+        Nothing -> return 0
+            --putStrLn "No se encontraron datos respecto a la venta total"
+            
+
+{-
+totalVentasAnuales:: String -> String -> IO ()
+totalVentasAnuales anio direccion = do 
+    leer <- DataJS.readFile direccion
+    let contenido = decode leer :: Maybe [Venta]      
+    case contenido of 
+        Just v -> do
+            let ventasAnio = filter (\x -> 
+                    case (split (fecha x)) of
+                        [year, _, _] -> year == anio
+                        _ -> False ) v
+                           
+            if null ventasAnio then ()--putStrLn "No hay registros del año solicitado"
+                else do 
+                    let totalCant = foldl (\sum x -> sum + cantidad x) 0 ventasAnio
+                    -- return totalCant
+                    putStrLn $ "Total vendido en el año " ++ anio ++ ": " ++ show totalCant
         Nothing -> putStrLn "No se encontraron datos respecto a la venta total"
+-}
+
+mostrarVentasMensuales:: String -> IO ()
+mostrarVentasMensuales direccion = do
+    let meses = [ if n < 10 then "0" ++ show n else show n | n <- [1..12] ] -- map show [01..12]
+    mapM_ (\x -> do 
+        total <- (totalVentasMensuales x direccion)
+        putStrLn $ "Total vendido en el mes " ++ x ++ ": " ++ show (total)
+        ) meses
 
 
 totalVentasAnuales:: String -> String -> IO ()
@@ -61,11 +92,6 @@ totalVentasAnuales anio direccion = do
                     putStrLn $ "Total vendido en el año " ++ anio ++ ": " ++ show totalCant
         Nothing -> putStrLn "No se encontraron datos respecto a la venta total"
 
-
-mostrarVentasMensuales:: String -> IO ()
-mostrarVentasMensuales direccion = do
-    let meses = [ if n < 10 then "0" ++ show n else show n | n <- [1..12] ] -- map show [01..12]
-    mapM_ (\x -> (totalVentasMensuales x direccion)) meses
 
 mostrarVentasAnuales:: String -> IO()
 mostrarVentasAnuales direccion = do

@@ -15,7 +15,11 @@ import Data.Text (Text)
 
 import Data.Maybe (catMaybes)
 
-
+{-| La funcion 'encontrarNullCantidad' determina si no hay cantidades '0' en las ventas.
+ - Si no hay, retorna un comentario
+ - Si hay, retorna la funcion 'modificarNullCantidad'
+ - Toma un argumenot, de tipo 'Int'.
+-}
 encontrarNullCantidad :: String -> IO ()
 encontrarNullCantidad direccion = do
     leer <- DataJS.readFile direccion
@@ -122,6 +126,6 @@ eliminarIdRepetido direccion = do
                 if (length (filter (\y -> venta_id y == venta_id x) v) > 1) 
                     then do 
                         (eliminarId (venta_id x) direccion) 
-                        putStrLn $ "Se encontro el id " ++ show(venta_id x) ++ "repetido, eliminando venta.."
+                        putStrLn $ "Se encontro el id " ++ show(venta_id x) ++ " repetido, eliminando venta.."
                     else return()) v 
             --putStrLn $ "Se encontro el id " ++ show venta_id x ++ "repetido, eliminando venta.."

@@ -69,16 +69,16 @@ validarFecha fecha = do
 
 validarVenta :: Venta -> IO (Maybe Venta)
 validarVenta venta = do
-    if (venta_id venta < 1 || cantidad venta < 1 || precio_unitario venta < 1 || total venta < 1 )
+    if (venta_id venta < 0 || cantidad venta < 0 || precio_unitario venta < 0 || total venta < 0 || null (fecha venta) || null (producto_nombre venta) || null (categoria venta))
         then return Nothing
         else if not (validarFecha (fecha venta))
             then return Nothing 
             else do
-                let division =  ((total venta) / (fromIntegral (cantidad venta) * precio_unitario venta) )
-                if (division /= 1) then 
-                    return Nothing 
-                else
-                    return (Just venta)
+                -- let division =  ((total venta) / (fromIntegral (cantidad venta) * precio_unitario venta) )
+                --if (division /= 1) then 
+                --    return Nothing 
+                --else
+                return (Just venta)
 
 
 concatenarJsons :: String -> String -> IO()

@@ -6,6 +6,7 @@ import Control.Monad()
 import Backend.Importacion (validarDireccion, validarDatos)
 import Backend.Procesamiento (encontrarNullCantidad, encontrarNullPrecioUnitario, eliminarIdRepetido)
 import Backend.Analisis (totalVentas, mostrarVentasMensuales, mostrarVentasAnuales)
+import Backend.AnalisisTemporal (mesMayorVentaTotal)
 
 menu :: IO ()
 menu = do
@@ -177,15 +178,28 @@ menuAnalisisTemporal = do
     case opcion of
         "1" -> do
             putStrLn " Mes con mayor venta total seleccionada"
-            -- Llamar a la funcion correspondiente
-            menuAnalisisTemporal
+            putStrLn "Aprete espacio para volver al menu"
+            putStrLn "Ingrese la ruta del archivo a analizar: "
+            ruta <- getLine
+            if ruta == " "
+                then menuAnalisisTemporal 
+                else do
+                    valido <- validarDireccion ruta
+                    if (not valido) 
+                        then do 
+                            putStrLn "Direccion invalida"
+                            menuAnalisisTemporal
+                        else do
+                            mesMayorVentaTotal ruta
+                            menuAnalisisTemporal
+            
         "2" -> do
             putStrLn "Calcular la tasa de las ventas seleccionada"
-            -- Llamar a la funcion correspondiente
+
             menuAnalisisTemporal
         "3" -> do
             putStrLn "Resumen de ventas por trimestre seleccionada"
-            -- Llamar a la funcion correspondiente
+
             menuAnalisisTemporal
         "4" -> menu
         _   -> do
@@ -227,6 +241,7 @@ menuEstadisticas = do
 main :: IO ()
 main = do
     menu
-
+-- "C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Modules\Data.json"
+-- "C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Modules\Importar.json"
 -- "src/Backend/Modules/Data.json"
 -- "src/Backend/Modules/Importar.json"

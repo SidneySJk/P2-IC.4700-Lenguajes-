@@ -5,10 +5,50 @@
         "producto_id": 109, 
         "producto_nombre": "C\u00e1mara", 
         "categoria": "Electr\u00f3nica", 
-        "cantidad": 2, 
-        "precio_unitario": 250.0, 
-        "total": -500.0 
+        "cantidad": 8, 
+        "precio_unitario": 100.0, 
+        "total": 800.0 
     }, 
+    { 
+        "venta_id": 2, 
+        "fecha": "2023-01-12", 
+        "producto_id": 176, 
+        "producto_nombre": "Tel\u00e9fono", 
+        "categoria": "Electr\u00f3nica", 
+        "cantidad": 8, 
+        "precio_unitario": 100.0, 
+        "total": 800.0 
+    },
+    { 
+        "venta_id": 3, 
+        "fecha": "2023-11-02", 
+        "producto_id": 176, 
+        "producto_nombre": "Tel\u00e9fono", 
+        "categoria": "Electr\u00f3nica", 
+        "cantidad": 8, 
+        "precio_unitario": 100.0, 
+        "total": 800.0 
+    },
+    { 
+        "venta_id": 3, 
+        "fecha": "2023-11-02", 
+        "producto_id": 176, 
+        "producto_nombre": "Tel\u00e9fono", 
+        "categoria": "Electr\u00f3nica", 
+        "cantidad": 1, 
+        "precio_unitario": 500.0, 
+        "total": 500.0 
+    },
+    { 
+        "venta_id": 4, 
+        "fecha": "2023-11-02", 
+        "producto_id": 176, 
+        "producto_nombre": "Tel\u00e9fono", 
+        "categoria": "Electr\u00f3nica", 
+        "cantidad": 3, 
+        "precio_unitario": 200.0, 
+        "total": 600.0 
+    },
     { 
         "venta_id": 5, 
         "fecha": "2023-01-12", 
@@ -17,6 +57,7 @@
         "categoria": "Electr\u00f3nica", 
         "cantidad": 3, 
         "precio_unitario": 500.0, 
-        "total": 500.0 
-    } 
+        "total": 1500.0 
+    }
+
 ] 
