@@ -13,6 +13,7 @@ import qualified Data.ByteString.Lazy as DataJS
 import Data.Aeson.Encode.Pretty (encodePretty, defConfig, Config(..))
 import Data.Text (Text)
 
+import Data.Maybe (catMaybes)
 
 
 encontrarNullCantidad :: String -> IO ()
@@ -46,6 +47,7 @@ modificarNullCantidad direccion idVenta = do
                     if (venta_id x == idVenta) 
                     then x {cantidad = media}  
                     else x) v
+            putStrLn $ "El se ha modificado el cantidad de la venta de id: " ++ show idVenta 
             DataJS.writeFile direccion (encodePretty nullActualizado)
         Nothing -> putStrLn "Error al decodificar el JSON"
 
@@ -86,6 +88,7 @@ modificarNullPrecioUnitario direccion idVenta = do
                     if venta_id x == idVenta
                     then x {precio_unitario = media} 
                     else x) v
+            putStrLn $ "El se ha modificado el precio unitario de la venta de id: " ++ show idVenta
             -- let actualizar = map (\x -> if venta_id x == id then x { precio_unitario = encontrarPrecioUnitario total cantidad } else x) v
             DataJS.writeFile direccion (encodePretty nullActualizado)
         Nothing -> putStrLn "Error al decodificar el JSON"
@@ -94,17 +97,31 @@ modificarNullPrecioUnitario direccion idVenta = do
 encontrarPrecioUnitario :: Double -> Int -> Double
 encontrarPrecioUnitario total cantidad = total / fromIntegral cantidad 
 
-{-
-descartarRepetidos :: Venta -> IO (Maybe Venta)
-descartarRepetidos venta = do
-    if (venta_id venta < 1 || cantidad venta < 1 || precio_unitario venta < 1 || total venta < 1 )
-        then return Nothing
-        else if not (validarFecha (fecha venta))
-            then return Nothing 
-            else do
-                let division =  ((total venta) / (fromIntegral (cantidad venta) * precio_unitario venta) )
-                if (division /= 1) then 
-                    return Nothing 
-                else
-                    return (Just venta)
--}
+
+eliminarId :: Int -> String -> IO ()--(Maybe Venta)
+eliminarId idVenta direccion = do
+    leer <- DataJS.readFile direccion
+    let contenido = decode leer :: Maybe [Venta]
+    case contenido of 
+        Just v -> do
+            let actualizado = filter (\x -> 
+                    if ( venta_id x == idVenta ) 
+                    then False 
+                    else True) v
+            -- let filtro = catMaybes actualizado
+            DataJS.writeFile direccion (encodePretty actualizado) 
+
+
+eliminarIdRepetido:: String -> IO ()
+eliminarIdRepetido direccion = do
+    leer <- DataJS.readFile direccion
+    let contenido = decode leer :: Maybe [Venta]
+    case contenido of 
+        Just v -> do
+            mapM_ (\x -> 
+                if (length (filter (\y -> venta_id y == venta_id x) v) > 1) 
+                    then do 
+                        (eliminarId (venta_id x) direccion) 
+                        putStrLn $ "Se encontro el id " ++ show(venta_id x) ++ "repetido, eliminando venta.."
+                    else return()) v 
+            --putStrLn $ "Se encontro el id " ++ show venta_id x ++ "repetido, eliminando venta.."

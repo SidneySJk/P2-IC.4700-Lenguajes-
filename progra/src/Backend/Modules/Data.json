@@ -10,16 +10,6 @@
         "venta_id": 1
     },
     {
-        "cantidad": 1,
-        "categoria": "Electrónica",
-        "fecha": "2023-01-12",
-        "precio_unitario": 500,
-        "producto_id": 106,
-        "producto_nombre": "Teléfono",
-        "total": 500,
-        "venta_id": 2
-    },
-    {
         "cantidad": 2,
         "categoria": "Electrónica",
         "fecha": "2023-01-04",
@@ -28,5 +18,15 @@
         "producto_nombre": "Cámara",
         "total": 500,
         "venta_id": 3
+    },
+    {
+        "cantidad": 3,
+        "categoria": "Electrónica",
+        "fecha": "2023-01-12",
+        "precio_unitario": 100,
+        "producto_id": 176,
+        "producto_nombre": "Teléfono",
+        "total": 300,
+        "venta_id": 9
     }
 ]

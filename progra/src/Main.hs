@@ -4,8 +4,8 @@ module Main where
 import System.IO
 import Control.Monad()
 import Backend.Importacion (validarDireccion, validarDatos)
-import Backend.Procesamiento (encontrarNullCantidad, encontrarNullPrecioUnitario)
-import Backend.Analisis (totalVentas, totalVentasMensuales, totalVentasAnuales)
+import Backend.Procesamiento (encontrarNullCantidad, encontrarNullPrecioUnitario, eliminarIdRepetido)
+import Backend.Analisis (totalVentas, mostrarVentasMensuales, mostrarVentasAnuales)
 
 menu :: IO ()
 menu = do
@@ -97,6 +97,7 @@ menuProcesamiento = do
                 else do
                     encontrarNullCantidad direccion
                     encontrarNullPrecioUnitario direccion
+                    eliminarIdRepetido direccion
                     putStrLn "Completando y eliminando datos..."
                     menu
                     putStrLn (concat (replicate 20 "°.*."))
@@ -120,18 +121,35 @@ menuAnalisisDatos = do
             putStrLn "Total de ventas seleccionada"
             putStrLn "Ingrese la ruta del archivo a procesar: "
             ruta <- getLine
-            totalVentas ruta
-            menuAnalisisDatos
+            if ruta == " "
+                then menuAnalisisDatos 
+                else do
+                    valido <- validarDireccion ruta
+                    if (not valido) 
+                        then do 
+                            putStrLn "Direccion invalida"
+                            menuAnalisisDatos 
+                        else do
+                            totalVentas ruta
+                            menuAnalisisDatos
+            putStrLn (concat (replicate 20 "°.*."))
         "2" -> do
             
             putStrLn "Total de ventas mensuales y anuales seleccionada"
             putStrLn "Ingrese la ruta del archivo a procesar: "
-            rango1 <- getLine
-            putStrLn (concat (replicate 20 "°.*."))
-            
-            --totalVentasMensuales 
-            --totalVentas
-            menuAnalisisDatos
+            ruta <- getLine
+            if ruta == " "
+                then menuAnalisisDatos 
+                else do
+                    valido <- validarDireccion ruta
+                    if (not valido) 
+                        then do 
+                            putStrLn "Direccion invalida"
+                            menuAnalisisDatos 
+                        else do
+                            mostrarVentasMensuales ruta
+                            mostrarVentasAnuales ruta
+                            menuAnalisisDatos
             putStrLn (concat (replicate 20 "°.*."))
         {-
         "3" -> do

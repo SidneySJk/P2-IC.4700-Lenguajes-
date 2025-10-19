@@ -5,7 +5,6 @@ module Backend.Analisis where
 import Backend.Importacion (Venta(..))
 
 import qualified Data.ByteString.Lazy as DataJS
--- import Data.List.Split (splitOn)
 import Data.Aeson (decode)
 import Data.Maybe (fromMaybe)
 
@@ -35,13 +34,13 @@ totalVentasMensuales mes direccion = do
         Just v -> do
             let ventasMes = filter (\x -> 
                     case (split (fecha x)) of
-                        [year, month, dia] -> month == mes
+                        [_, month, _] -> month == mes
                         _ -> False ) v
             
-            if null ventasMes then putStrLn "No hay registros del mes solicitado"
+            if null ventasMes then return () --putStrLn "No hay registros del mes solicitado"
                 else do 
                     let totalCant = foldl (\sum x -> sum + cantidad x) 0 ventasMes
-                    putStrLn $ "Total vendido en el mes" ++ mes ++ ": " ++ show totalCant
+                    putStrLn $ "Total vendido en el mes " ++ mes ++ ": " ++ show totalCant
         Nothing -> putStrLn "No se encontraron datos respecto a la venta total"
 
 
@@ -53,18 +52,29 @@ totalVentasAnuales anio direccion = do
         Just v -> do
             let ventasAnio = filter (\x -> 
                     case (split (fecha x)) of
-                        [year, mes, dia] -> year == anio
+                        [year, _, _] -> year == anio
                         _ -> False ) v
                            
-            if null ventasAnio then putStrLn "No hay registros del año solicitado"
+            if null ventasAnio then return ()--putStrLn "No hay registros del año solicitado"
                 else do 
                     let totalCant = foldl (\sum x -> sum + cantidad x) 0 ventasAnio
-                    putStrLn $ "Total vendido en el año" ++ anio ++ ": " ++ show totalCant
+                    putStrLn $ "Total vendido en el año " ++ anio ++ ": " ++ show totalCant
         Nothing -> putStrLn "No se encontraron datos respecto a la venta total"
 
-{-
-mostrarVentasMensuales:: IO ()
-mostrarVentasMensuales = do
-    let meses = [1..12]
-    let mostrar = map (\x -> (totalVentasMensuales x)) meses
--}   
+
+mostrarVentasMensuales:: String -> IO ()
+mostrarVentasMensuales direccion = do
+    let meses = [ if n < 10 then "0" ++ show n else show n | n <- [1..12] ] -- map show [01..12]
+    mapM_ (\x -> (totalVentasMensuales x direccion)) meses
+
+mostrarVentasAnuales:: String -> IO()
+mostrarVentasAnuales direccion = do
+    leer <- DataJS.readFile direccion
+    let contenido = decode leer :: Maybe [Venta]  
+    case contenido of
+        Just v -> do
+             mapM_ (\x -> case (split (fecha x)) of
+                            [year, _ , _] -> totalVentasAnuales year direccion
+                            _ -> return () ) v
+            
+        Nothing -> putStrLn "No hay fechas registradas"
