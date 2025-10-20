@@ -1,12 +1,12 @@
 module Main where
--- module Backend.Importacion (validarDireccion, validarDatos) where
 
 import System.IO
 import Control.Monad()
 import Backend.Importacion (validarDireccion, validarDatos)
 import Backend.Procesamiento (encontrarNullCantidad, encontrarNullPrecioUnitario, eliminarIdRepetido)
 import Backend.Analisis (totalVentas, mostrarVentasMensuales, mostrarVentasAnuales)
-import Backend.AnalisisTemporal (mesMayorVentaTotal)
+import Backend.AnalisisTemporal (mesMayorVentaTotal, aplicarFormula)
+import Backend.Estadistica (determinarParticipacion)
 
 menu :: IO ()
 menu = do
@@ -68,8 +68,6 @@ menuImportacion = do
         then menu 
         else do
             valido <- validacionesRutas ruta rutaD
-            -- let validarDir = validarDireccion ruta
-            -- let validarDirD = validarDireccion rutaD
             if (not valido)
                 then do 
                     menuImportacion
@@ -163,6 +161,27 @@ menuAnalisisDatos = do
             putStrLn "Opcion no valida, intente de nuevo."
             menuAnalisisDatos
 
+menuCalcularTasa:: String -> IO ()
+menuCalcularTasa direccion = do
+    putStrLn "Ingrese el mes y año a calcular"
+    putStrLn "Aprete espacio para volver al menu"
+    putStrLn "Formato año: ####"
+    anio <- getLine
+    putStrLn "Formato mes: ##"
+    mes <- getLine
+    if (anio == " " || mes == " ")
+        then menuAnalisisTemporal 
+        else do
+            -- valido <- validacionesRutas anio mes
+            -- if (not valido)
+            --     then do 
+            --         menuCalcularTasa
+            --    else do 
+            putStrLn (concat (replicate 20 "°.*."))
+            tasa <- aplicarFormula direccion anio mes
+            putStrLn $ "La tasa de creciomiento/decrecimiento actual es: " ++ (show tasa)
+            putStrLn (concat (replicate 20 "°.*."))
+
 
 menuAnalisisTemporal :: IO ()
 menuAnalisisTemporal = do
@@ -194,9 +213,21 @@ menuAnalisisTemporal = do
                             menuAnalisisTemporal
             
         "2" -> do
-            putStrLn "Calcular la tasa de las ventas seleccionada"
-
-            menuAnalisisTemporal
+            putStrLn "Calcular la tasa de las ventas seleccionada" 
+            putStrLn "Aprete espacio para volver al menu"
+            putStrLn "Ingrese la ruta del archivo a analizar: "
+            ruta <- getLine
+            if ruta == " "
+                then menuAnalisisTemporal 
+                else do
+                    valido <- validarDireccion ruta
+                    if (not valido) 
+                        then do 
+                            putStrLn "Direccion invalida"
+                            menuAnalisisTemporal
+                        else do
+                            menuCalcularTasa ruta
+                            menuAnalisisTemporal
         "3" -> do
             putStrLn "Resumen de ventas por trimestre seleccionada"
 
@@ -205,6 +236,8 @@ menuAnalisisTemporal = do
         _   -> do
             putStrLn "Opcion no valida, intente de nuevo."
             menuAnalisisTemporal
+
+
 
 menuBusqueda :: IO ()
 menuBusqueda = do
@@ -227,20 +260,36 @@ menuBusqueda = do
                     menuBusqueda
                     putStrLn (concat (replicate 20 "°.*."))
 
+
 menuEstadisticas :: IO ()
 menuEstadisticas = do
     putStrLn (concat (replicate 20 "°.*."))
-    putStrLn "Top 5 de categorías con mayores ventas (monto)"
-    putStrLn "Producto más vendido (por cantidad)"
-    putStrLn "Categoría con menor participación (cantidad)"
-    putStrLn "Resumen general: "
-   
+    --putStrLn "Top 5 de categorías con mayores ventas (monto)"
+    --putStrLn "Producto más vendido (por cantidad)"
+    putStrLn "Ingrese la ruta del archivo a analizar: "
+    ruta <- getLine
+    if ruta == " "
+        then menu
+            else do
+                valido <- validarDireccion ruta
+                if (not valido) 
+                    then do 
+                        putStrLn "Direccion invalida"
+                        menuEstadisticas
+                    else do
+                        putStrLn "Categoría con menor participación (cantidad): "
+                        determinarParticipacion ruta
+                        menuEstadisticas
+    
+    --putStrLn "Resumen general: "
+    
     putStrLn (concat (replicate 20 "°.*."))
     hFlush stdout
     
 main :: IO ()
 main = do
     menu
+
 -- "C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Modules\Data.json"
 -- "C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Modules\Importar.json"
 -- "src/Backend/Modules/Data.json"

@@ -5,13 +5,9 @@ module Backend.Importacion where
 
 import Data.Aeson.Types (ToJSON(toJSON), FromJSON(parseJSON), Value(..), object, (.=), (.:), withObject) 
 import Data.Aeson (encode, decode, pairs)
-
--- Libreria Data.Aeson
 import qualified Data.ByteString.Lazy as DataJS
 import Data.Aeson.Encode.Pretty (encodePretty, defConfig, Config(..))
 import Data.Text (Text)
-
--- Libreria Time
 import Data.Time.Format (parseTimeM, defaultTimeLocale)
 import Data.Time (Day)
 import System.Directory (doesFileExist)

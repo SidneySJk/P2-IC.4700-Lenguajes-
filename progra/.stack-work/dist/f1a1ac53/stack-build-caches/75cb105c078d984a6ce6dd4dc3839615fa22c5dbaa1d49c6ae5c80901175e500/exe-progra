@@ -3,14 +3,16 @@ C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\CHANGEL
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\README.md:
   hash: 55707bcdfb2e86185bac0980ed591e96a5383d1f3c95c669c2ede4688a7ff799
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\progra.cabal:
-  hash: 0550523a20469a701b8ea5c39a6bd608fbcbe0c8cc8e585b027ec5319b6717fb
+  hash: ddc66313b71619b4fa1a274f738acbbe61b38485c17e5ae4bd89de7bcfc616c0
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Analisis.hs:
-  hash: b0eaea6ce14db771d362e77d9244f3dedc810a9e969215ad0c9557c16b7a3cc9
+  hash: 8a82cb7160e63ea13c9200f51b0f1b8eb803396cc9fcef996a79c72fbbd04edb
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\AnalisisTemporal.hs:
-  hash: 30a5abc907e11e7f860ca7727d0f819454e6930582b544c54abbb30c4173558e
+  hash: 2414437cd47e2eb382d991241504b0dc64edd69d3edaba9a2463312ac451dbb9
+C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Estadistica.hs:
+  hash: 94b54130584744c3ba9e97328eb4451502ab07fc9204f28da4e05d550872493f
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Importacion.hs:
-  hash: dff3b65cbe7023414db5d50c8d6eea8fb1651440dbeffa5d37c312b87b871ba3
+  hash: d65327f2e6316dfc25b00bffad142a2991f70a91d3847777b9bfe77d1c1dee8e
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Backend\Procesamiento.hs:
-  hash: 2f38fa38422207f0cdf82b24f89b216cf55114b74325233cd0d9cbec3597fb67
+  hash: 67fa0d100a836e5c41c7c1484a4116d70bf1884afb4840db00717dc391a8565a
 C:\TEC CODIGO\Lenguajes\Proyectos\Proyecto2\P2-IC.4700-Lenguajes-\progra\src\Main.hs:
-  hash: 249a0ccd6a8c3d1db801bbf452d20524cf7fe68678d2020f08db5b622b168736
+  hash: 4d899e0e893787b0d540b678b086f83b534ead7ee8c831c20f2c92ac71c06d9d

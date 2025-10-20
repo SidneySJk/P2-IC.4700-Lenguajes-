@@ -37,38 +37,16 @@ totalVentasMensuales mes direccion = do
                         [_, month, _] -> month == mes
                         _ -> False ) v
             
-            if null ventasMes then return 0 --() --putStrLn "No hay registros del mes solicitado"
+            if null ventasMes then return 0 
                 else do 
                     let totalCant = foldl (\sum x -> sum + cantidad x) 0 ventasMes
                     return totalCant
-                    -- putStrLn $ "Total vendido en el mes " ++ mes ++ ": " ++ show totalCant
         Nothing -> return 0
-            --putStrLn "No se encontraron datos respecto a la venta total"
             
-
-{-
-totalVentasAnuales:: String -> String -> IO ()
-totalVentasAnuales anio direccion = do 
-    leer <- DataJS.readFile direccion
-    let contenido = decode leer :: Maybe [Venta]      
-    case contenido of 
-        Just v -> do
-            let ventasAnio = filter (\x -> 
-                    case (split (fecha x)) of
-                        [year, _, _] -> year == anio
-                        _ -> False ) v
-                           
-            if null ventasAnio then ()--putStrLn "No hay registros del año solicitado"
-                else do 
-                    let totalCant = foldl (\sum x -> sum + cantidad x) 0 ventasAnio
-                    -- return totalCant
-                    putStrLn $ "Total vendido en el año " ++ anio ++ ": " ++ show totalCant
-        Nothing -> putStrLn "No se encontraron datos respecto a la venta total"
--}
 
 mostrarVentasMensuales:: String -> IO ()
 mostrarVentasMensuales direccion = do
-    let meses = [ if n < 10 then "0" ++ show n else show n | n <- [1..12] ] -- map show [01..12]
+    let meses = [ if n < 10 then "0" ++ show n else show n | n <- [1..12] ] 
     mapM_ (\x -> do 
         total <- (totalVentasMensuales x direccion)
         putStrLn $ "Total vendido en el mes " ++ x ++ ": " ++ show (total)
